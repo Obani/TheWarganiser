@@ -2,6 +2,7 @@ package ie.app.william.thewarganiser;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +29,7 @@ public class AddUnits extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.i(TAG,"OnCreate");
+        Log.i(TAG, "OnCreate");
 
         final Button addButton = (Button) findViewById(R.id.addButton);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -36,7 +37,7 @@ public class AddUnits extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Unit Added",
                         Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "UNIT ADDED");
+                Log.i(TAG, "UNIT ADDED");
             }
 
 
@@ -45,9 +46,11 @@ public class AddUnits extends AppCompatActivity {
         UnitNames = (EditText) findViewById(R.id.UnitNames);
         UnitTypes = (EditText) findViewById(R.id.UnitTypes);
         armies = (TextView) findViewById(R.id.armies);
-        dbHandler = new MyDBHandler(this, null, null,1);
+        dbHandler = new MyDBHandler(this, null, null, 1);
+
         printDatabase();
     }
+
 
     public void addButtonClicked(){
         Units units = new Units(UnitNames.getText().toString(),UnitTypes.getText().toString());
@@ -84,12 +87,12 @@ public class AddUnits extends AppCompatActivity {
                 this.startActivity(intent1);
                 return true;
 
-            case R.id.boltgun:
-                Intent intent2 = new Intent(this, BoltGun.class);
+            case R.id.BoltGun:
+                Intent intent2 = new Intent(this, BoltGunActivity.class);
                 this.startActivity(intent2);
                 return true;
 
-            case R.id.about:
+            case R.id.About:
                 Intent intent3 = new Intent( this, About.class);
                 this.startActivity(intent3);
                 return true;

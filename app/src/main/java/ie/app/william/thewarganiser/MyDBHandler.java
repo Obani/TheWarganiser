@@ -25,18 +25,28 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String query = "CREATE TABLE" + TABLE_PRODUCTS + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT " +
-                COLUMN_NAME + " VARCHAR(255) " +
-                COLUMN_CLASSY + "VARCHAR(255) " +
-                ");";
+        String query = "CREATE TABLE " + TABLE_PRODUCTS + "(" +
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_NAME + " VARCHAR(255) NOT NULL, " +
+                COLUMN_CLASSY + " VARCHAR(255) NOT NULL );";
         sqLiteDatabase.execSQL(query);
+
+        insert();
+
+    }
+
+
+    public void insert()
+    {
+        String query = "INSERT INTO " +TABLE_PRODUCTS+
+                " (" +COLUMN_NAME+ ", "+COLUMN_CLASSY+ ") VALUES ('Cato Sicarius', '2nd Company Captain');";
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         onCreate(sqLiteDatabase);
+
     }
 
     public void addProduct(Units units) {
@@ -56,7 +66,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         Cursor c = sqLiteDatabase.rawQuery(query, null);
         c.moveToFirst();
 
-        while (c.isAfterLast()) {
+       /* while (c.isAfterLast()) {
             if (c.getString(c.getColumnIndex("name")) != null) {
                 dbString += c.getString(c.getColumnIndex("name"));
                 dbString += "\n";
@@ -64,7 +74,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
 
 
-        }
+        } */
         sqLiteDatabase.close();
         return dbString;
     }

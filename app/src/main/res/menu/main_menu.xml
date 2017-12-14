@@ -7,11 +7,15 @@
         android:title="Add Unit" />
 
     <item
-        android:id="@+id/boltgun"
+        android:id="@+id/BoltGun"
         android:title="Boltgun" />
 
     <item
-        android:id="@+id/about"
+        android:id="@+id/About"
         android:title="About" />
+
+    <item
+        android:id="@+id/MARBOMODE"
+        android:title="MARBOMODE" />
 
 </menu>

@@ -6,6 +6,11 @@ import android.widget.TextView;
 
 public class BoltGun extends AppCompatActivity {
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.content_bolt_gun);
+    }
 
 
 }

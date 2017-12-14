@@ -18,9 +18,12 @@
         </activity>
         <activity
             android:name=".BoltGun"
-            android:label="Report"
-            android:parentActivityName=".AddUnits" />
-        <activity android:name=".About"></activity>
+            android:label="Report"></activity>
+        <activity android:name=".About" />
+        <activity
+            android:name=".BoltGunActivity"
+            android:label="@string/title_activity_bolt_gun"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
