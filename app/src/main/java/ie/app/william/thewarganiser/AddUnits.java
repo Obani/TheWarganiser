@@ -21,10 +21,12 @@ public class AddUnits extends AppCompatActivity {
 
     private static final String TAG = "WillNote";
 
-    EditText editName,editClasses;
+    EditText editName,editClasses,editID;
     MyDBHandler dbHandler;
     Button addButton;
     Button viewAllButton;
+    Button updateButton;
+    Button deleteButton;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -36,12 +38,49 @@ public class AddUnits extends AppCompatActivity {
 
         editName = (EditText)findViewById(R.id.UnitNames);
         editClasses = (EditText)findViewById(R.id.UnitTypes);
+        editID = (EditText)findViewById(R.id.editID);
         addButton = (Button)findViewById(R.id.addButton);
         viewAllButton = (Button)findViewById(R.id.viewAllButton);
+        updateButton = (Button)findViewById(R.id.updateButton);
+        deleteButton = (Button)findViewById(R.id.deleteButton);
         AddData();
         viewAll();
+        UpdateData();
+        DeleteData();
     }
 
+    public void DeleteData()
+    {
+        deleteButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Integer deletedRows = dbHandler.deleteDate(editID.getText().toString());
+                        if(deletedRows > 0)
+                            Toast.makeText(AddUnits.this,"Data Deleted",Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(AddUnits.this,"Data Not Deleted",Toast.LENGTH_LONG).show();
+
+                    }
+                }
+        );
+    }
+    public void UpdateData()
+    {
+        updateButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        boolean isUpdate = dbHandler.updateData(editName.getText().toString(),editClasses.getText().toString(),editID.getText().toString());
+                        if(isUpdate == true)
+                            Toast.makeText(AddUnits.this,"Units Have Been Added",Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(AddUnits.this,"No Units Added",Toast.LENGTH_LONG).show();
+
+                    }
+                }
+        );
+    }
     public void AddData()
     {
         addButton.setOnClickListener(

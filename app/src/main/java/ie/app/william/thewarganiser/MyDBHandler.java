@@ -59,5 +59,20 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return res;
     }
 
+    public boolean updateData(String id,String name,String classes)
+    {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_1, id);
+        contentValues.put(COLUMN_2, name);
+        contentValues.put(COLUMN_3, classes);
+        sqLiteDatabase.update(TABLE_NAME, contentValues, "ID = ?",new String[] {id});
+        return true;
+    }
+
+    public Integer deleteDate (String id) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        return sqLiteDatabase.delete(TABLE_NAME, "ID = ?",new String[] {id});
+    }
 
 }
