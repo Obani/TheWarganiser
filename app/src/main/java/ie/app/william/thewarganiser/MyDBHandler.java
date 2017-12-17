@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.Cursor;
 import android.content.Context;
 import android.content.ContentValues;
+import android.util.Log;
+
 /**
  * Created by William on 05/11/2017.
  */
@@ -12,70 +14,50 @@ import android.content.ContentValues;
 public class MyDBHandler extends SQLiteOpenHelper {
 
 
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "legion.db";
-    public static final String TABLE_PRODUCTS = "UnitsTable";
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_NAME = "_name";
-    public static final String COLUMN_CLASSY = "_classy";
+    public static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "legion.db";
+    public static final String TABLE_NAME = "UnitsTable";
+    public static final String COLUMN_1 = "ID";
+    public static final String COLUMN_2 = "NAME";
+    public static final String COLUMN_3 = "CLASSES";
 
-    public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+    public MyDBHandler(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String query = "CREATE TABLE " + TABLE_PRODUCTS + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_NAME + " VARCHAR(255) NOT NULL, " +
-                COLUMN_CLASSY + " VARCHAR(255) NOT NULL );";
-        sqLiteDatabase.execSQL(query);
-
-        insert();
-
+        sqLiteDatabase.execSQL("create table " + TABLE_NAME +" (" + COLUMN_1 +" INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_2 + " TEXT, " + COLUMN_3 + " TEXT)");
     }
 
-
-    public void insert()
-    {
-        String query = "INSERT INTO " +TABLE_PRODUCTS+
-                " (" +COLUMN_NAME+ ", "+COLUMN_CLASSY+ ") VALUES ('Cato Sicarius', '2nd Company Captain');";
-    }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(sqLiteDatabase);
 
     }
 
-    public void addProduct(Units units) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, units.get_name());
-        values.put(COLUMN_CLASSY, units.get_classification());
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        sqLiteDatabase.insert(TABLE_PRODUCTS, null, values);
-        sqLiteDatabase.close();
+    public boolean insertData(String name,String classes)
+    {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_2, name);
+        contentValues.put(COLUMN_3, classes);
+        long result = sqLiteDatabase.insert(TABLE_NAME,null,contentValues);
+        if(result == -1)
+            return false;
+        else
+            return true;
     }
 
-    public String databaseToString() {
-        String dbString = "";
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_PRODUCTS + " WHERE 1";
-
-        Cursor c = sqLiteDatabase.rawQuery(query, null);
-        c.moveToFirst();
-
-       /* while (c.isAfterLast()) {
-            if (c.getString(c.getColumnIndex("name")) != null) {
-                dbString += c.getString(c.getColumnIndex("name"));
-                dbString += "\n";
-            }
-
-
-
-        } */
-        sqLiteDatabase.close();
-        return dbString;
+    public Cursor getAllData()
+    {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor res = sqLiteDatabase.rawQuery("select * from "+ TABLE_NAME, null);
+        return res;
     }
+
+
 }

@@ -2,7 +2,9 @@ package ie.app.william.thewarganiser;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,10 +21,10 @@ public class AddUnits extends AppCompatActivity {
 
     private static final String TAG = "WillNote";
 
-    EditText UnitNames;
-    EditText UnitTypes;
+    EditText editName,editClasses;
     MyDBHandler dbHandler;
-    TextView armies;
+    Button addButton;
+    Button viewAllButton;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -30,41 +32,65 @@ public class AddUnits extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(TAG, "OnCreate");
+        dbHandler = new MyDBHandler(this);
 
-        final Button addButton = (Button) findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Unit Added",
-                        Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "UNIT ADDED");
-            }
-
-
-        });
-
-        UnitNames = (EditText) findViewById(R.id.UnitNames);
-        UnitTypes = (EditText) findViewById(R.id.UnitTypes);
-        armies = (TextView) findViewById(R.id.armies);
-        dbHandler = new MyDBHandler(this, null, null, 1);
-
-        printDatabase();
+        editName = (EditText)findViewById(R.id.UnitNames);
+        editClasses = (EditText)findViewById(R.id.UnitTypes);
+        addButton = (Button)findViewById(R.id.addButton);
+        viewAllButton = (Button)findViewById(R.id.viewAllButton);
+        AddData();
+        viewAll();
     }
 
-
-    public void addButtonClicked(){
-        Units units = new Units(UnitNames.getText().toString(),UnitTypes.getText().toString());
-        dbHandler.addProduct(units);
-        printDatabase();
-    }
-
-    public void printDatabase()
+    public void AddData()
     {
-        String dbString = dbHandler.databaseToString();
-        armies.setText(dbString);
-        UnitNames.setText("");
-        UnitTypes.setText("");
+        addButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                      boolean isInserted = dbHandler.insertData(editName.getText().toString(),
+                                editClasses.getText().toString());
+                      if(isInserted == true)
+                          Toast.makeText(AddUnits.this,"Units Have Been Added",Toast.LENGTH_LONG).show();
+                      else
+                          Toast.makeText(AddUnits.this,"No Units Added",Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+    }
 
+    public void viewAll()
+    {
+        viewAllButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                       Cursor res = dbHandler.getAllData();
+                       if(res.getCount() == 0) {
+                           showMessage("Error","Nothing found");
+                           return;
+                       }
+
+                       StringBuffer buffer = new StringBuffer();
+                       while (res.moveToNext()) {
+                           buffer.append("Id :"+ res.getString(0)+ "\n");
+                           buffer.append("Name :"+ res.getString(1)+ "\n");
+                           buffer.append("Class :"+ res.getString(2)+ "\n");
+                       }
+
+                       showMessage("Data",buffer.toString());
+                    }
+                }
+        );
+    }
+
+    public void showMessage(String title,String Message)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(Message);
+        builder.show();
     }
 
 
